@@ -7,7 +7,7 @@ const Marksheet = require('./Model/marksheetModel');
 //implementing CORS
 //Access-control-Allow-Origin(Allowing Everyone to use our API)
 app.use(cors());
-app.options('*', cors());
+// app.options('*', cors());
 
 //body parse middleware
 app.use(express.json({ limit: '10kb' }));
@@ -51,32 +51,15 @@ app.get('/api/getOne', async (req, res) => {
 
 app.post('/api/calculate', async function (req, res) {
   try {
-    const subjects = req.body.subjects;
-    if (
-      subjects === null ||
-      !Array.isArray(subjects) ||
-      subjects.length === 0
-    ) {
-      return res.status(500).json({
-        status: 'fail',
-        message: 'Please Provide All Required fields',
-      });
+    const subjects = req.body;
+    if (subjects === null || !Array.isArray(subjects) || subjects.length === 0) {
+      return res.status(500).send('Please Provide All Required fields');
     }
 
-    if (
-      subjects.some(
-        (x) =>
-          !x.name ||
-          !x.obtainedMarks ||
-          x.obtainedMarks == null ||
-          x.name == null
-      )
-    ) {
-      return res.status(500).json({
-        status: 'fail',
-        message: 'Please Provide All Required fields',
-      });
+    if (subjects.some((x) => !x.name || !x.obtainedMarks || x.obtainedMarks == null || x.name == null)) {
+      return res.status(500).send('Please Provide All Required fields');
     }
+
     let totalMarks = 0;
     let minMarks = subjects[0].obtainedMarks;
     let maxMarks = subjects[0].obtainedMarks;
