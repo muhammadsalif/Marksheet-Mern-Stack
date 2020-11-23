@@ -91,7 +91,7 @@ app.post('/api/calculate', async function (req, res) {
 
     const doc = await Marksheet.create(marksheetModel);
     return res.status(201).json({
-      status: 'success',
+      status: 'Successfully Submitted',
       data: {
         doc,
       },

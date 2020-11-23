@@ -7,23 +7,30 @@ export default function Form() {
     // let arr = [4];
 
     let [arr, setArr] = useState([0]);
-
     // console.log("arr length", arr.length)
 
-    let [name, setName] = useState("");
-    let [obtainedMarks, setObtainedMarks] = useState("");
+    let [stdName, setStdName] = useState([]);
+    let [obtainedMarks, setObtainedMarks] = useState([]);
+
+    let [response, setResponse] = useState("");
+    console.log("Server reponse ", response)
+
+    console.log("Name ", typeof stdName)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Name : ", name)
+        // console.log("Name : ", stdName)
         console.log("obtainedMarks : ", obtainedMarks)
-        setName("")
-        setObtainedMarks("")
-        await axios.post(`${baseUrl}/api/calculate`,[ {
+        setStdName([])
+        setObtainedMarks([])
+        await axios.post(`${baseUrl}/api/calculate`, [{
             obtainedMarks: obtainedMarks,
-            name: name
+            name: stdName
         }])
-            .then((res) => console.log(res))
+            .then((res) => {
+                setResponse(res.data.data.doc)
+                alert(res.data.status)
+            })
             .catch((err) => console.log(err.request.response))
     }
 
@@ -69,9 +76,9 @@ export default function Form() {
                             <div key={ind} className="form-group d-flex align-items-center">
                                 <label htmlFor="exampleInputEmail1" className="font-weight-bold">Subject {ind + 1 + " :"}</label>
                                 <input
-                                    value={name}
+                                    value={stdName}
                                     required
-                                    onChange={(e) => setName(e.target.value)} placeholder="Enter subject name" type="name" className="mx-4 form-control text-capitalize" />
+                                    onChange={(e) => setStdName(e.target.value)} placeholder="Enter subject name" type="name" className="mx-4 form-control text-capitalize" />
                                 <input
                                     value={obtainedMarks}
                                     required
@@ -88,22 +95,24 @@ export default function Form() {
             {/* Row 2 server */}
             <div className="row">
                 <div className="col-12">
-                    <form>
-                        <div className="form-group d-flex align-items-center">
-                            <label htmlFor="exampleInputEmail1" className="font-weight-bold">Maximum Marks Subject:</label>
-                            <input value="English" disabled className="mx-4 form-control" />
-                            <input value="45" className="form-control mr-4" disabled />
-                        </div>
-                        <div className="form-group d-flex align-items-center">
-                            <label htmlFor="exampleInputEmail1" className="font-weight-bold">Minimum Marks Subject:</label>
-                            <input value="English" disabled className="mx-4 form-control" />
-                            <input value="45" className="form-control mr-4" disabled />
-                        </div>
-                        <div className="form-group d-flex align-items-center">
-                            <h5 className="font-weight-bold">Total Percentage:</h5>
-                            <h5 className="ml-2">80%</h5>
-                        </div>
-                    </form>
+                    {response ?
+                        <form>
+                            <div className="form-group d-flex align-items-center">
+                                <label htmlFor="exampleInputEmail1" className="font-weight-bold">Maximum Marks Subject:</label>
+                                <input value={response.maxSubject} disabled className="mx-4 form-control" />
+                                <input value={response.maxMarks} className="form-control mr-4" disabled />
+                            </div>
+                            <div className="form-group d-flex align-items-center">
+                                <label htmlFor="exampleInputEmail1" className="font-weight-bold">Minimum Marks Subject:</label>
+                                <input value={response.minSubject} disabled className="mx-4 form-control" />
+                                <input value={response.minMarks} className="form-control mr-4" disabled />
+                            </div>
+                            <div className="form-group d-flex align-items-center">
+                                <h5 className="font-weight-bold">Total Percentage:</h5>
+                                <h5 className="ml-2">{response.percentage}%</h5>
+                            </div>
+                        </form>
+                        : null}
                 </div>
             </div>
             {/* Container closing tag */}
