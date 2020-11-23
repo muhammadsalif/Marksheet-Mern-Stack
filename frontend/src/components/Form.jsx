@@ -1,39 +1,35 @@
 import React, { useState } from 'react'
 import axios from "axios"
 
-
 export default function Form() {
     const baseUrl = "http://localhost:5000"
-    // let arr = [4];
 
-    let [arr, setArr] = useState([0]);
-    // console.log("arr length", arr.length)
-
-    let [stdName, setStdName] = useState([]);
-    let [obtainedMarks, setObtainedMarks] = useState([]);
-
+    //Local States 
+    let [arr, setArr] = useState([]);
+    let [subjects, setSubjects] = useState([]);
     let [response, setResponse] = useState("");
-    console.log("Server reponse ", response)
-
-    console.log("Name ", typeof stdName)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // console.log("Name : ", stdName)
-        console.log("obtainedMarks : ", obtainedMarks)
-        setStdName([])
-        setObtainedMarks([])
-        await axios.post(`${baseUrl}/api/calculate`, [{
-            obtainedMarks: obtainedMarks,
-            name: stdName
-        }])
+
+        await axios.post(`${baseUrl}/api/calculate`, subjects)
             .then((res) => {
                 setResponse(res.data.data.doc)
                 alert(res.data.status)
             })
             .catch((err) => console.log(err.request.response))
     }
-
+    const handleChange = (e, name) => {
+        const key = name.split('_');
+        const sub = [...subjects];
+        if (key[0] == 'key') {
+            sub[key[1]].name = e.target.value
+        }
+        else {
+            sub[key[1]].obtainedMarks = parseInt(e.target.value);
+        }
+        setSubjects(sub);
+    }
     return (
         <div className="container">
             <div className="row d-flex justify-content-center py-4">
@@ -46,14 +42,20 @@ export default function Form() {
                         </div>
                         <div className="form-group">
                             <select placeholder="Total Subject" className="custom-select mr-sm-2" id="inlineFormCustomSelect" onChange={(e) => {
-                                // // console.log(console.log("Selected value", e.target.value))
-
                                 const val = e.target.value;
-
+                                let arrLength = (Array.from(Array(parseInt(val)).keys()))
                                 if (!isNaN(val)) {
+                                    const finalState = [];
+                                    arrLength.map(row => {
+                                        const obj = {
+                                            name: '',
+                                            obtainedMarks: ''
+                                        }
+                                        finalState.push(obj)
+                                    })
+                                    setSubjects(finalState)
                                     setArr(Array.from(Array(parseInt(val)).keys()))
                                 }
-                                // console.log("On change function", e.target.value)
                             }
                             }>
                                 <option value={1}>One</option>
@@ -72,21 +74,21 @@ export default function Form() {
                 {/* Right column */}
                 <div className="col-12 col-md-10 col-lg-8 ">
                     <form onSubmit={handleSubmit}>
-                        {arr.map((obj, ind) =>
-                            <div key={ind} className="form-group d-flex align-items-center">
-                                <label htmlFor="exampleInputEmail1" className="font-weight-bold">Subject {ind + 1 + " :"}</label>
+                        {arr ? arr.map((obj, i) =>
+                            <div key={i} className="form-group d-flex align-items-center">
+                                <label htmlFor="exampleInputEmail1" className="font-weight-bold">Subject {i + 1 + " :"}</label>
                                 <input
-                                    value={stdName}
+                                    value={subjects[i].name}
                                     required
-                                    onChange={(e) => setStdName(e.target.value)} placeholder="Enter subject name" type="name" className="mx-4 form-control text-capitalize" />
+                                    onChange={(e) => handleChange(e, `key_${i}`)} placeholder="Enter subject name" type="name" className="mx-4 form-control text-capitalize" />
                                 <input
-                                    value={obtainedMarks}
+                                    value={subjects[i].obtainedMarks}
                                     required
-                                    onChange={(e) => setObtainedMarks(e.target.value)}
+                                    onChange={(e) => handleChange(e, `val_${i}`)}
                                     placeholder="Marks Obtained" type="number" max="100" className="form-control mr-4" />
                             </div>
                         )
-                        }
+                            : null}
                         <button type="submit" className="btn btn-block btn-warning font-weight-bold text-uppercase">Submit</button>
                     </form>
                 </div>
@@ -99,17 +101,17 @@ export default function Form() {
                         <form>
                             <div className="form-group d-flex align-items-center">
                                 <label htmlFor="exampleInputEmail1" className="font-weight-bold">Maximum Marks Subject:</label>
-                                <input value={response.maxSubject} disabled className="mx-4 form-control" />
-                                <input value={response.maxMarks} className="form-control mr-4" disabled />
+                                <input value={response.maxSubject} disabled className="mx-4 form-control text-capitalize" />
+                                <input value={response.maxMarks} className="text-capitalize form-control mr-4" disabled />
                             </div>
-                            <div className="form-group d-flex align-items-center">
-                                <label htmlFor="exampleInputEmail1" className="font-weight-bold">Minimum Marks Subject:</label>
-                                <input value={response.minSubject} disabled className="mx-4 form-control" />
-                                <input value={response.minMarks} className="form-control mr-4" disabled />
+                            <div className="text-capitalize form-group d-flex align-items-center">
+                                <label htmlFor="exampleInputEmail1" className="text-capitalize font-weight-bold">Minimum Marks Subject:</label>
+                                <input value={response.minSubject} disabled className="text-capitalize mx-4 form-control" />
+                                <input value={response.minMarks} className="text-capitalize form-control mr-4" disabled />
                             </div>
-                            <div className="form-group d-flex align-items-center">
-                                <h5 className="font-weight-bold">Total Percentage:</h5>
-                                <h5 className="ml-2">{response.percentage}%</h5>
+                            <div className="text-capitalize form-group d-flex align-items-center">
+                                <h5 className="text-capitalize font-weight-bold">Total Percentage:</h5>
+                                <h5 className="text-capitalize ml-2">{response.percentage}%</h5>
                             </div>
                         </form>
                         : null}
