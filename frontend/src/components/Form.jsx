@@ -8,7 +8,6 @@ export default function Form() {
     let [arr, setArr] = useState([]);
     let [subjects, setSubjects] = useState([]);
     let [response, setResponse] = useState("");
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -38,7 +37,7 @@ export default function Form() {
                     <form>
                         <div className="form-group">
                             <label htmlFor="exampleInputEmail1" className="font-weight-bold text-uppercase">Name:</label>
-                            <input placeholder="Enter your name" type="email" className="form-control" aria-describedby="emailHelp" />
+                            <input placeholder="Enter your name" type="email" className="form-control text-capitalize" aria-describedby="emailHelp" />
                         </div>
                         <div className="form-group">
                             <select placeholder="Total Subject" className="custom-select mr-sm-2" id="inlineFormCustomSelect" onChange={(e) => {
@@ -46,7 +45,7 @@ export default function Form() {
                                 let arrLength = (Array.from(Array(parseInt(val)).keys()))
                                 if (!isNaN(val)) {
                                     const finalState = [];
-                                    arrLength.map(row => {
+                                    arrLength.map(() => {
                                         const obj = {
                                             name: '',
                                             obtainedMarks: ''
@@ -89,7 +88,7 @@ export default function Form() {
                             </div>
                         )
                             : null}
-                        <button type="submit" className="btn btn-block btn-warning font-weight-bold text-uppercase">Submit</button>
+                        <button type="submit" className="btn btn-block btn-warning font-weight-bold text-uppercase" style={{ display: `${arr.length ? 'inherit' : "none"}` }}>Submit</button>
                     </form>
                 </div>
             </div>
