@@ -36,7 +36,7 @@ export default function Form() {
                 <div className="col-8 col-md-4">
                     <form>
                         <div className="form-group">
-                            <label htmlFor="exampleInputEmail1" className="font-weight-bold text-uppercase">Name:</label>
+                            <label htmlFor="exampleInputEmail1" className="font-weight-bold text-uppercase" style={{ borderBottom: "3px solid black" }}>Name:</label>
                             <input placeholder="Enter your name" type="email" className="form-control text-capitalize" aria-describedby="emailHelp" />
                         </div>
                         <div className="form-group">
@@ -75,7 +75,7 @@ export default function Form() {
                     <form onSubmit={handleSubmit}>
                         {arr ? arr.map((obj, i) =>
                             <div key={i} className="form-group d-flex align-items-center">
-                                <label htmlFor="exampleInputEmail1" className="font-weight-bold">Subject {i + 1 + " :"}</label>
+                                <label htmlFor="exampleInputEmail1" className="font-weight-bold" style={{ borderBottom: "3px solid black" }}>Subject {i + 1 + " :"}</label>
                                 <input
                                     value={subjects[i].name}
                                     required
@@ -88,7 +88,7 @@ export default function Form() {
                             </div>
                         )
                             : null}
-                        <button type="submit" className="btn btn-block btn-warning font-weight-bold text-uppercase" style={{ display: `${arr.length ? 'inherit' : "none"}` }}>Submit</button>
+                        <button type="submit" className="btn btn-block btn-primary text-uppercase" style={{ display: `${arr.length ? 'inherit' : "none"}` }}>Submit</button>
                     </form>
                 </div>
             </div>
@@ -99,17 +99,17 @@ export default function Form() {
                     {response ?
                         <form>
                             <div className="form-group d-flex align-items-center">
-                                <label htmlFor="exampleInputEmail1" className="font-weight-bold">Maximum Marks Subject:</label>
+                                <label htmlFor="exampleInputEmail1" className="font-weight-bold" style={{ borderBottom: "3px solid black" }}>Maximum Marks Subject:</label>
                                 <input value={response.maxSubject} disabled className="mx-4 form-control text-capitalize" />
                                 <input value={response.maxMarks} className="text-capitalize form-control mr-4" disabled />
                             </div>
                             <div className="text-capitalize form-group d-flex align-items-center">
-                                <label htmlFor="exampleInputEmail1" className="text-capitalize font-weight-bold">Minimum Marks Subject:</label>
+                                <label htmlFor="exampleInputEmail1" className="text-capitalize font-weight-bold" style={{ borderBottom: "3px solid black" }}>Minimum Marks Subject:</label>
                                 <input value={response.minSubject} disabled className="text-capitalize mx-4 form-control" />
                                 <input value={response.minMarks} className="text-capitalize form-control mr-4" disabled />
                             </div>
-                            <div className="text-capitalize form-group d-flex align-items-center">
-                                <h5 className="text-capitalize font-weight-bold">Total Percentage:</h5>
+                            <div className="text-capitalize form-group d-flex align-items-center justify-content-center">
+                                <h5 className="text-capitalize font-weight-bold px-2 py-2" style={{ borderBottom: "3px solid black" }}>Total Percentage:</h5>
                                 <h5 className="text-capitalize ml-2">{response.percentage}%</h5>
                             </div>
                         </form>
